@@ -24,6 +24,11 @@ const el = {
   appView: $('app-view'),
   account: $('account'),
   accountName: $('account-name'),
+  accountAvatar: $('account-avatar'),
+  statTotal: $('stat-total'),
+  statTodo: $('stat-todo'),
+  statProgress: $('stat-progress'),
+  statDone: $('stat-done'),
   signoutBtn: $('signout-btn'),
   authHeading: $('auth-heading'),
   authSubtitle: $('auth-subtitle'),
@@ -163,6 +168,21 @@ function showApp(user) {
   el.appView.hidden = false;
   el.account.hidden = false;
   el.accountName.textContent = user.name ? `${user.name} · ${user.email}` : user.email;
+  if (el.accountAvatar) el.accountAvatar.textContent = initialsFor(user);
+}
+
+/* Two letters for the round avatar: from the name, else from the email. */
+function initialsFor(user) {
+  const name = (user.name || '').trim();
+  if (name) {
+    const parts = name.split(/\s+/).filter(Boolean);
+    const first = parts[0] ? parts[0][0] : '';
+    const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
+    const letters = (first + last) || first;
+    return letters.toUpperCase();
+  }
+  const email = (user.email || '').trim();
+  return email ? email[0].toUpperCase() : '?';
 }
 
 function setAuthMode(mode) {
@@ -243,6 +263,8 @@ function renderTask(task) {
   const li = document.createElement('li');
   li.className = `task${task.status === 'done' ? ' is-done' : ''}`;
   li.dataset.id = String(task.id);
+  li.dataset.priority = task.priority;
+  li.dataset.status = task.status;
 
   if (state.editingId === task.id) {
     li.appendChild(renderEditForm(task));
@@ -438,6 +460,15 @@ function renderTasks() {
   tasks.forEach((task) => el.taskList.appendChild(renderTask(task)));
 
   const total = state.tasks.length;
+  const counts = { todo: 0, in_progress: 0, done: 0 };
+  state.tasks.forEach((task) => {
+    if (counts[task.status] !== undefined) counts[task.status] += 1;
+  });
+  if (el.statTotal) el.statTotal.textContent = String(total);
+  if (el.statTodo) el.statTodo.textContent = String(counts.todo);
+  if (el.statProgress) el.statProgress.textContent = String(counts.in_progress);
+  if (el.statDone) el.statDone.textContent = String(counts.done);
+
   el.taskCount.textContent = total === 0 ? '' : `${total} task${total === 1 ? '' : 's'}`;
 }
 
