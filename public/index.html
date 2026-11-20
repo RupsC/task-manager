@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="/styles.css?v=3" />
+  <link rel="icon" href="data:," />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <h1>Task Manager</h1>
+      <div class="account" id="account" hidden>
+        <span class="account-name" id="account-name"></span>
+        <button type="button" class="btn btn-ghost" id="signout-btn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="alert" id="alert" role="alert" aria-live="polite" hidden></div>
+
+  <!-- Sign in / sign up -->
+  <main class="auth-view" id="auth-view">
+    <section class="card auth-card">
+      <h2 id="auth-heading">Sign in</h2>
+      <p class="muted" id="auth-subtitle">Welcome back. Sign in to see your tasks.</p>
+
+      <form id="signin-form" novalidate>
+        <label for="signin-email">Email</label>
+        <input id="signin-email" name="email" type="email" autocomplete="email"
+               placeholder="you@example.com" maxlength="254" required />
+        <p class="field-error" id="signin-email-error" data-error-for="email"></p>
+
+        <label for="signin-password">Password</label>
+        <input id="signin-password" name="password" type="password"
+               autocomplete="current-password" maxlength="128" required />
+        <p class="field-error" id="signin-password-error" data-error-for="password"></p>
+
+        <button type="submit" class="btn btn-primary btn-block" id="signin-submit">Sign in</button>
+      </form>
+
+      <form id="signup-form" hidden novalidate>
+        <label for="signup-name">Your name <span class="muted">(optional)</span></label>
+        <input id="signup-name" name="name" type="text" autocomplete="name"
+               placeholder="Rupali" maxlength="80" />
+        <p class="field-error" data-error-for="name"></p>
+
+        <label for="signup-email">Email</label>
+        <input id="signup-email" name="email" type="email" autocomplete="email"
+               placeholder="you@example.com" maxlength="254" required />
+        <p class="field-error" data-error-for="email"></p>
+
+        <label for="signup-password">Password</label>
+        <input id="signup-password" name="password" type="password"
+               autocomplete="new-password" maxlength="128" required />
+        <p class="hint">At least 8 characters.</p>
+        <p class="field-error" data-error-for="password"></p>
+
+        <button type="submit" class="btn btn-primary btn-block" id="signup-submit">Create account</button>
+      </form>
+
+      <p class="switch">
+        <span id="switch-text">New here?</span>
+        <button type="button" class="link" id="switch-mode">Create an account</button>
+      </p>
+    </section>
+  </main>
+
+  <!-- Main app -->
+  <main class="app-view" id="app-view" hidden>
+    <section class="card">
+      <h2>Add a task</h2>
+      <form id="create-form" novalidate>
+        <label for="task-title">Title</label>
+        <input id="task-title" name="title" type="text" placeholder="What needs doing?"
+               maxlength="120" required />
+        <p class="field-error" data-error-for="title"></p>
+
+        <label for="task-description">Notes <span class="muted">(optional)</span></label>
+        <textarea id="task-description" name="description" rows="2" maxlength="2000"
+                  placeholder="Any details…"></textarea>
+        <p class="field-error" data-error-for="description"></p>
+
+        <div class="row">
+          <div class="row-item">
+            <label for="task-priority">Priority</label>
+            <select id="task-priority" name="priority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="row-item">
+            <label for="task-status">Status</label>
+            <select id="task-status" name="status">
+              <option value="todo" selected>To do</option>
+              <option value="in_progress">In progress</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="create-submit">Add task</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="list-head">
+        <h2>Your tasks</h2>
+        <span class="count" id="task-count"></span>
+      </div>
+
+      <div class="filters" role="group" aria-label="Filter tasks by status">
+        <button type="button" class="chip is-active" data-filter="all">All</button>
+        <button type="button" class="chip" data-filter="todo">To do</button>
+        <button type="button" class="chip" data-filter="in_progress">In progress</button>
+        <button type="button" class="chip" data-filter="done">Done</button>
+      </div>
+
+      <p class="state" id="list-loading">Loading your tasks…</p>
+      <p class="state" id="list-empty" hidden>No tasks yet. Add your first one above.</p>
+      <p class="state" id="list-filtered-empty" hidden>Nothing here with that status.</p>
+      <ul class="task-list" id="task-list" aria-live="polite"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Task Manager — a small app for keeping track of what needs doing.</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
